@@ -4667,13 +4667,16 @@
             assert(0 <= oparg);
             assert((unsigned)oparg < Py_ARRAY_LENGTH(binary_ops));
             assert(binary_ops[oparg]);
+
+            PySys_WriteStderr("[PranaliPy] Executing BINARY_OP\n");
+
             res = binary_ops[oparg](lhs, rhs);
-            #line 4672 "Python/generated_cases.c.h"
+            #line 4675 "Python/generated_cases.c.h"
             Py_DECREF(lhs);
             Py_DECREF(rhs);
-            #line 3393 "Python/bytecodes.c"
+            #line 3396 "Python/bytecodes.c"
             if (res == NULL) goto pop_2_error;
-            #line 4677 "Python/generated_cases.c.h"
+            #line 4680 "Python/generated_cases.c.h"
             STACK_SHRINK(1);
             stack_pointer[-1] = res;
             next_instr += 1;
@@ -4683,16 +4686,16 @@
         TARGET(SWAP) {
             PyObject *top = stack_pointer[-1];
             PyObject *bottom = stack_pointer[-(2 + (oparg-2))];
-            #line 3398 "Python/bytecodes.c"
+            #line 3401 "Python/bytecodes.c"
             assert(oparg >= 2);
-            #line 4689 "Python/generated_cases.c.h"
+            #line 4692 "Python/generated_cases.c.h"
             stack_pointer[-1] = bottom;
             stack_pointer[-(2 + (oparg-2))] = top;
             DISPATCH();
         }
 
         TARGET(INSTRUMENTED_INSTRUCTION) {
-            #line 3402 "Python/bytecodes.c"
+            #line 3405 "Python/bytecodes.c"
             int next_opcode = _Py_call_instrumentation_instruction(
                 tstate, frame, next_instr-1);
             if (next_opcode < 0) goto error;
@@ -4704,26 +4707,26 @@
             assert(next_opcode > 0 && next_opcode < 256);
             opcode = next_opcode;
             DISPATCH_GOTO();
-            #line 4708 "Python/generated_cases.c.h"
+            #line 4711 "Python/generated_cases.c.h"
         }
 
         TARGET(INSTRUMENTED_JUMP_FORWARD) {
-            #line 3416 "Python/bytecodes.c"
+            #line 3419 "Python/bytecodes.c"
             INSTRUMENTED_JUMP(next_instr-1, next_instr+oparg, PY_MONITORING_EVENT_JUMP);
-            #line 4714 "Python/generated_cases.c.h"
+            #line 4717 "Python/generated_cases.c.h"
             DISPATCH();
         }
 
         TARGET(INSTRUMENTED_JUMP_BACKWARD) {
-            #line 3420 "Python/bytecodes.c"
+            #line 3423 "Python/bytecodes.c"
             INSTRUMENTED_JUMP(next_instr-1, next_instr-oparg, PY_MONITORING_EVENT_JUMP);
-            #line 4721 "Python/generated_cases.c.h"
+            #line 4724 "Python/generated_cases.c.h"
             CHECK_EVAL_BREAKER();
             DISPATCH();
         }
 
         TARGET(INSTRUMENTED_POP_JUMP_IF_TRUE) {
-            #line 3425 "Python/bytecodes.c"
+            #line 3428 "Python/bytecodes.c"
             PyObject *cond = POP();
             int err = PyObject_IsTrue(cond);
             Py_DECREF(cond);
@@ -4732,12 +4735,12 @@
             assert(err == 0 || err == 1);
             int offset = err*oparg;
             INSTRUMENTED_JUMP(here, next_instr + offset, PY_MONITORING_EVENT_BRANCH);
-            #line 4736 "Python/generated_cases.c.h"
+            #line 4739 "Python/generated_cases.c.h"
             DISPATCH();
         }
 
         TARGET(INSTRUMENTED_POP_JUMP_IF_FALSE) {
-            #line 3436 "Python/bytecodes.c"
+            #line 3439 "Python/bytecodes.c"
             PyObject *cond = POP();
             int err = PyObject_IsTrue(cond);
             Py_DECREF(cond);
@@ -4746,12 +4749,12 @@
             assert(err == 0 || err == 1);
             int offset = (1-err)*oparg;
             INSTRUMENTED_JUMP(here, next_instr + offset, PY_MONITORING_EVENT_BRANCH);
-            #line 4750 "Python/generated_cases.c.h"
+            #line 4753 "Python/generated_cases.c.h"
             DISPATCH();
         }
 
         TARGET(INSTRUMENTED_POP_JUMP_IF_NONE) {
-            #line 3447 "Python/bytecodes.c"
+            #line 3450 "Python/bytecodes.c"
             PyObject *value = POP();
             _Py_CODEUNIT *here = next_instr-1;
             int offset;
@@ -4763,12 +4766,12 @@
                 offset = 0;
             }
             INSTRUMENTED_JUMP(here, next_instr + offset, PY_MONITORING_EVENT_BRANCH);
-            #line 4767 "Python/generated_cases.c.h"
+            #line 4770 "Python/generated_cases.c.h"
             DISPATCH();
         }
 
         TARGET(INSTRUMENTED_POP_JUMP_IF_NOT_NONE) {
-            #line 3461 "Python/bytecodes.c"
+            #line 3464 "Python/bytecodes.c"
             PyObject *value = POP();
             _Py_CODEUNIT *here = next_instr-1;
             int offset;
@@ -4780,30 +4783,30 @@
                  offset = oparg;
             }
             INSTRUMENTED_JUMP(here, next_instr + offset, PY_MONITORING_EVENT_BRANCH);
-            #line 4784 "Python/generated_cases.c.h"
+            #line 4787 "Python/generated_cases.c.h"
             DISPATCH();
         }
 
         TARGET(EXTENDED_ARG) {
-            #line 3475 "Python/bytecodes.c"
+            #line 3478 "Python/bytecodes.c"
             assert(oparg);
             opcode = next_instr->op.code;
             oparg = oparg << 8 | next_instr->op.arg;
             PRE_DISPATCH_GOTO();
             DISPATCH_GOTO();
-            #line 4795 "Python/generated_cases.c.h"
+            #line 4798 "Python/generated_cases.c.h"
         }
 
         TARGET(CACHE) {
-            #line 3483 "Python/bytecodes.c"
+            #line 3486 "Python/bytecodes.c"
             assert(0 && "Executing a cache.");
             Py_UNREACHABLE();
-            #line 4802 "Python/generated_cases.c.h"
+            #line 4805 "Python/generated_cases.c.h"
         }
 
         TARGET(RESERVED) {
-            #line 3488 "Python/bytecodes.c"
+            #line 3491 "Python/bytecodes.c"
             assert(0 && "Executing RESERVED instruction.");
             Py_UNREACHABLE();
-            #line 4809 "Python/generated_cases.c.h"
+            #line 4812 "Python/generated_cases.c.h"
         }

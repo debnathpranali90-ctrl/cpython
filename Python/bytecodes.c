@@ -3388,6 +3388,9 @@ dummy_func(
             assert(0 <= oparg);
             assert((unsigned)oparg < Py_ARRAY_LENGTH(binary_ops));
             assert(binary_ops[oparg]);
+
+            PySys_WriteStderr("[PranaliPy] Executing BINARY_OP\n");
+            
             res = binary_ops[oparg](lhs, rhs);
             DECREF_INPUTS();
             ERROR_IF(res == NULL, error);
